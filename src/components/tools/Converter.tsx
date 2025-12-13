@@ -2,7 +2,7 @@ import { getCyrillicText } from "../utils/latinToCyrillic";
 import CurrentYear from "./CurrentYear";
 import Button from "./Buttons";
 import { useTextStorage } from "../tools/Storage";
-import "../css/Converter.css";
+import "../css/converter.css";
 
 const Converter = () => {
   const { text, setText, undo, redo, clear } = useTextStorage("");
