@@ -38,7 +38,7 @@ const Converter = () => {
           </div>
         </div>
         <h4>
-          Hints: w=ь | ww=щ, WW=Щ | qw=ы, QW=Ы | Ts=Ц, ts=ц | Yo=Ё, yo=ё <br />
+          Hints: w=ь | ww=щ, Ww=Щ | qw=ы, Qw=Ы | Ts=Ц, ts=ц | Yo=Ё, yo=ё <br />
           <br />
           Shortcuts: Ctrl+C=Copy | Ctrl+X=Clear | Ctrl+Z=Undo |
           Ctrl+Shift+Z=Redo

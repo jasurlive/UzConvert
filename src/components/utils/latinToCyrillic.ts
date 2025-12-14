@@ -74,7 +74,6 @@ export const latCyr: Record<string, string> = {
   "'": "ъ",
   ee: "э",
   eE: "э",
-  e: "е",
   yu: "ю",
   yU: "ю",
   ya: "я",
@@ -89,10 +88,10 @@ export const latCyr: Record<string, string> = {
   h: "ҳ",
   w: "ь",
   ww: "щ",
-  WW: "Щ",
-  QW: "Ы",
+  Ww: "Щ",
+  Qw: "Ы",
   qw: "ы",
-  W: "Э",
+  W: "Ь",
 };
 
 const cyrLat: Record<string, string> = Object.entries(latCyr).reduce(
@@ -103,22 +102,57 @@ const cyrLat: Record<string, string> = Object.entries(latCyr).reduce(
   {} as Record<string, string>
 );
 
-export const getCyrillicText = (latin: string) => {
+export const getCyrillicText = (latin: string): string => {
   if (!latin) return "";
+
   let res = "";
+  const vowels = "aeiouAEIOU";
+
   for (let i = 0; i < latin.length; i++) {
-    const dual = latin[i] + (latin[i + 1] || "");
+    const curr = latin[i];
+    const prev = latin[i - 1] || "";
+    const next = latin[i + 1] || "";
+    const next2 = latin[i + 2] || "";
+
+    if (
+      (curr === "y" || curr === "Y") &&
+      (next === "o" || next === "O") &&
+      (next2 === "'" || next2 === "`")
+    ) {
+      const yOut = curr === "Y" ? "Й" : "й";
+      const oOut = next === "O" ? "Ў" : "ў";
+      res += yOut + oOut;
+      i += 2;
+      continue;
+    }
+
+    if (curr === "e" || curr === "E") {
+      const isWordStart = i === 0 || /\s|[-–—.,!?()]/.test(prev);
+
+      const afterVowel = vowels.includes(prev) || prev === "'" || prev === "`";
+
+      if (isWordStart || afterVowel) {
+        res += curr === "E" ? "Э" : "э";
+      } else {
+        res += curr === "E" ? "Е" : "е";
+      }
+      continue;
+    }
+
+    const dual = curr + next;
     if (latCyr[dual]) {
       res += latCyr[dual];
       i++;
       continue;
     }
-    res += latCyr[latin[i]] || latin[i];
+
+    res += latCyr[curr] || curr;
   }
+
   return res;
 };
 
-export const getLatinText = (cyr: string) =>
+export const getLatinText = (cyr: string): string =>
   cyr
     ? Array.from(cyr)
         .map((c) => cyrLat[c] || c)
