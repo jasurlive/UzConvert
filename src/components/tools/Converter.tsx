@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { getCyrillicText } from "../utils/latinToCyrillic";
 import CurrentYear from "./CurrentYear";
 import Button from "./Buttons";
@@ -7,6 +8,14 @@ import "../css/converter.css";
 const Converter = () => {
   const { text, setText, undo, redo, clear } = useTextStorage("");
   const result = getCyrillicText(text);
+  const outputRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const copyResult = () => {
+    if (!outputRef.current) return;
+    outputRef.current.focus();
+    outputRef.current.select();
+    navigator.clipboard.writeText(outputRef.current.value);
+  };
 
   return (
     <div>
@@ -29,16 +38,14 @@ const Converter = () => {
 
           <div className="col-md-6">
             <h2 className="input-title">Kirillcha | Cyrillic</h2>
-            <Button
-              onCopy={() =>
-                navigator.clipboard.writeText(result).catch(console.error)
-              }
-            />
-            <textarea value={result} readOnly rows={15} />
+            <Button onCopy={copyResult} />
+            <textarea ref={outputRef} value={result} readOnly rows={15} />
           </div>
         </div>
+
         <h4>
-          Hints: w=ь | ww=щ, Ww=Щ | qw=ы, Qw=Ы | Ts=Ц, ts=ц | Yo=Ё, yo=ё <br />
+          Hints: w=ь | ww=щ, Ww=Щ | qw=ы, Qw=Ы | Ts=Ц, ts=ц | Yo=Ё, yo=ё
+          <br />
           <br />
           Shortcuts: Ctrl+C=Copy | Ctrl+X=Clear | Ctrl+Z=Undo |
           Ctrl+Shift+Z=Redo
